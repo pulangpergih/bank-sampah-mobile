@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.banksampah.model.SetoranSampah
+import com.example.banksampah.model.Setoran
 import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun PengelolaanSampahScreen() {
-    val _list = remember { MutableStateFlow(listOf<SetoranSampah>()) }
+    val _list = remember { MutableStateFlow(listOf<Setoran>()) }
     val list by remember { _list }.collectAsState()
     Column(modifier = Modifier.fillMaxWidth()) {
         FormPencatatanSampah { item ->
@@ -39,13 +39,18 @@ fun PengelolaanSampahScreen() {
                             fontWeight = FontWeight.Bold)
                     }
                     Column(modifier = Modifier.weight(3f)) {
-                        Text(text = "Nama", fontSize = 14.sp)
-                        Text(text = item.nama, fontSize = 16.sp, fontWeight =
+                        Text(text = "Keterangan", fontSize = 14.sp)
+                        Text(text = item.keterangan, fontSize = 16.sp, fontWeight =
                         FontWeight.Bold)
                     }
                     Column(modifier = Modifier.weight(3f)) {
-                        Text(text = "Berat", fontSize = 14.sp)
-                        Text(text = "${item.berat} Kg", fontSize = 16.sp,
+                        Text(text = "Pemasukan", fontSize = 14.sp)
+                        Text(text = "Rp ${item.pemasukuan}", fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold)
+                    }
+                    Column(modifier = Modifier.weight(3f)) {
+                        Text(text = "Pemasukan", fontSize = 14.sp)
+                        Text(text = "Rp ${item.pengeluaran}", fontSize = 16.sp,
                             fontWeight = FontWeight.Bold)
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.banksampah.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -19,15 +20,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.banksampah.model.SetoranSampah
+import com.example.banksampah.model.Setoran
 import com.example.banksampah.ui.theme.Purple40
 import com.example.banksampah.ui.theme.PurpleGrey40
+import androidx.compose.ui.platform.LocalContext
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
+fun FormPencatatanSampah(onSimpan: (Setoran) -> Unit) {
+    val context = LocalContext.current
     val tanggal = remember { mutableStateOf(TextFieldValue("")) }
-    val nama = remember { mutableStateOf(TextFieldValue("")) }
-    val berat = remember { mutableStateOf(TextFieldValue("")) }
+    val keterangan = remember { mutableStateOf(TextFieldValue("")) }
+    val pemasukan = remember { mutableStateOf(TextFieldValue("")) }
+    val pengeluaran = remember { mutableStateOf(TextFieldValue("")) }
     Box {
         Column(
             modifier = Modifier
@@ -46,10 +51,10 @@ fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
                 placeholder = { Text(text = "yyyy-mm-dd") }
             )
             OutlinedTextField(
-                label = { Text(text = "Nama") },
-                value = nama.value,
+                label = { Text(text = "Keterangan") },
+                value = keterangan.value,
                 onValueChange = {
-                    nama.value = it
+                    keterangan.value = it
                 },
                 modifier = Modifier
                     .padding(4.dp)
@@ -58,13 +63,13 @@ fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
                     capitalization =
                     KeyboardCapitalization.Characters, keyboardType = KeyboardType.Text
                 ),
-                placeholder = { Text(text = "XXXXX") }
+                placeholder = { Text(text = "Pemasukan") }
             )
             OutlinedTextField(
-                label = { Text(text = "Berat") },
-                value = berat.value,
+                label = { Text(text = "Pemasukan") },
+                value = pemasukan.value,
                 onValueChange = {
-                    berat.value = it
+                    pemasukan.value = it
                 },
                 modifier = Modifier
                     .padding(4.dp)
@@ -73,7 +78,22 @@ fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
                     keyboardType =
                     KeyboardType.Decimal
                 ),
-                placeholder = { Text(text = "5") }
+                placeholder = { Text(text = "0") }
+            )
+            OutlinedTextField(
+                label = { Text(text = "Pengeluaran") },
+                value = pengeluaran.value,
+                onValueChange = {
+                    pengeluaran.value = it
+                },
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType =
+                    KeyboardType.Decimal
+                ),
+                placeholder = { Text(text = "0") }
             )
             val loginButtonColors = ButtonDefaults.buttonColors(
                 containerColor = Purple40,
@@ -87,14 +107,35 @@ fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
                 .padding(4.dp)
                 .fillMaxWidth()) {
                 Button(modifier = Modifier.weight(5f), onClick = {
-                    val item = SetoranSampah(
-                        tanggal.value.text, nama.value.text,
-                        berat.value.text
+                        val item = Setoran(
+                        tanggal.value.text,
+                        keterangan.value.text,
+                        pemasukan.value.text,
+                        pengeluaran.value.text
                     )
-                    onSimpan(item)
-                    tanggal.value = TextFieldValue("")
-                    nama.value = TextFieldValue("")
-                    berat.value = TextFieldValue("")
+                    if ( tanggal.value.text == "") {
+                        Toast.makeText(context, "Tanggal harus diisi", Toast.LENGTH_SHORT).show()
+                } else {
+                        if ( keterangan.value.text == "") {
+                            Toast.makeText(context, "Keterangan harus diisi", Toast.LENGTH_SHORT).show()
+                        }else{
+                            if ( pemasukan.value.text == "") {
+                                Toast.makeText(context, "Pemasukan harus diisi", Toast.LENGTH_SHORT).show()
+                            } else{
+                                if ( pengeluaran.value.text == "") {
+                                    Toast.makeText(context, "Pengeluaran harus diisi", Toast.LENGTH_SHORT).show()
+                                }else{
+                                    onSimpan(item)
+                                    tanggal.value = TextFieldValue("")
+                                    keterangan.value = TextFieldValue("")
+                                    pemasukan.value = TextFieldValue("")
+                                    pengeluaran.value = TextFieldValue("")
+                                }
+                            }
+                        }
+                    }
+
+//
                 }, colors = loginButtonColors) {
                     Text(
                         text = "Simpan",
@@ -106,8 +147,9 @@ fun FormPencatatanSampah(onSimpan: (SetoranSampah) -> Unit) {
                 }
                 Button(modifier = Modifier.weight(5f), onClick = {
                     tanggal.value = TextFieldValue("")
-                    nama.value = TextFieldValue("")
-                    berat.value = TextFieldValue("")
+                    keterangan.value = TextFieldValue("")
+                    pemasukan.value = TextFieldValue("")
+                    pengeluaran.value = TextFieldValue("")
                 }, colors = resetButtonColors) {
                     Text(
                         text = "Reset",
